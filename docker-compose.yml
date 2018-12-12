@@ -1,0 +1,12 @@
+version: '3'
+services:
+  gui:
+    image: topazdb/gui
+    ports:
+      - "80:80"
+      
+  api:
+    image: topazdb/api
+
+  db:
+    image: topazdb/server

@@ -1,12 +1,15 @@
 version: '3'
 services:
+  core:
+    build: .
+    ports: 
+      - "80:8081"
+
   db:
     image: topazdb/server
 
   api:
     image: topazdb/api
-    ports:
-      - "8080:80"
     environment:
       - TOPAZ_HOST=db
       - TOPAZ_USER=root

@@ -4,15 +4,21 @@ services:
     build: .
     image: topazdb/core
     ports: 
-      - "80:8081"
-
+      - "80:80"
+  
+  gui:
+    image: topazdb/gui
+    
   db:
     image: topazdb/server
+    environment:
+      - MARIADB_DATABASE=${TOPAZ_DATABASE}
+      - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
 
   api:
     image: topazdb/api
     environment:
       - TOPAZ_HOST=db
-      - TOPAZ_USER=root
-      - TOPAZ_PASSWORD=root
-      - TOPAZ_DATABASE=topazdb
+      - TOPAZ_USER
+      - TOPAZ_PASSWORD
+      - TOPAZ_DATABASE

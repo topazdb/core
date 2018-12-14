@@ -1,12 +1,14 @@
 version: '3'
 services:
-  gui:
-    image: topazdb/gui
-    ports:
-      - "80:80"
-      
-  api:
-    image: topazdb/api
-
   db:
     image: topazdb/server
+
+  api:
+    image: topazdb/api
+    ports:
+      - "8080:80"
+    environment:
+      - TOPAZ_HOST=db
+      - TOPAZ_USER=root
+      - TOPAZ_PASSWORD=root
+      - TOPAZ_DATABASE=topazdb

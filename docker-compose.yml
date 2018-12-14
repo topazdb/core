@@ -2,6 +2,7 @@ version: '3'
 services:
   core:
     build: .
+    image: topazdb/core
     ports: 
       - "80:8081"
 

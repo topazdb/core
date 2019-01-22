@@ -1,4 +1,9 @@
 #!/bin/bash
 git submodule init
 git submodule update
+
+cd gui
+npm install
+cd ../
+
 docker-compose build

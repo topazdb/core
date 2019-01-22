@@ -8,9 +8,8 @@ services:
   
   gui:
     image: topazdb/gui
-    volumes:
-      - ./gui:/var/topazdb-gui/
-    command: npm start -- --watch
+    ports:
+      - "8080:8080"
   
   db:
     image: topazdb/server

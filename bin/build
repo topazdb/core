@@ -2,8 +2,6 @@
 git submodule init
 git submodule update --init --recursive --remote
 
-cd gui
-npm install
-cd ../
+sed -i "s/\\r//g" server/bin/combine
 
 docker-compose build

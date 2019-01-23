@@ -14,14 +14,12 @@ services:
   
   db:
     image: topazdb/server
-    ports:
-      - "3306:3306"
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
 
   api:
-    image: topazdb/api
+    build: ./api
     environment:
       - TOPAZ_HOST=db
       - TOPAZ_USER

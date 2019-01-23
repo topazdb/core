@@ -7,13 +7,13 @@ services:
       - "80:80"
   
   gui:
-    image: topazdb/gui
+    build: ./gui
     volumes:
       - ./gui:/var/topazdb-gui/
     command: npm start -- --watch
   
   db:
-    image: topazdb/server
+    build: ./server
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}

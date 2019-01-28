@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
   core:
     build: .
@@ -7,19 +7,24 @@ services:
       - "80:80"
   
   gui:
-    build: ./gui
+    build: 
+      context: ./gui
+      target: development
+    image: topazdb/gui
     volumes:
-      - ./gui:/var/topazdb-gui/
+      - ./gui:/app
     command: npm start -- --watch
   
   db:
     build: ./server
+    image: topazdb/server
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
 
   api:
     build: ./api
+    image: topazdb/api
     environment:
       - TOPAZ_HOST=db
       - TOPAZ_USER

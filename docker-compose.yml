@@ -23,7 +23,11 @@ services:
       - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
 
   api:
-    build: ./api
+    build: 
+      context: ./api
+      target: development
+    volumes:
+      - ./api:/app
     image: topazdb/api
     environment:
       - TOPAZ_HOST=db

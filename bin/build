@@ -1,6 +1,4 @@
 #!/bin/bash
-git submodule init
-git submodule update --init --recursive --remote
 
 # Cleanup
 sed -i "s/\\r//g" server/bin/combine

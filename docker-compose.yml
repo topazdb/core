@@ -21,14 +21,14 @@ services:
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
-
+  
   api:
     build: 
       context: ./api
       target: development
     volumes:
       - ./api/src:/app
-      - /mnt/csafe:/data
+      - /var/run/topazdb:/data
     image: topazdb/api
     environment:
       - TOPAZ_HOST=db

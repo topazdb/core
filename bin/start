@@ -1,4 +1,12 @@
 #!/bin/bash
+set -e
 
 # Simple at the moment, but may contain mode switching in the future
+if [ ! -d /var/run/topazdb ]; then
+    sudo mkdir /var/run/topazdb
+    sudo chown $USER /var/run/topazdb
+fi
+
+
+sshfs -o allow_other ${NETID:-$USER}@isu-csafe.stat.iastate.edu:/media/Sunny/CSAFE /var/run/topazdb
 docker-compose up

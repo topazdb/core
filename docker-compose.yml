@@ -27,7 +27,8 @@ services:
       context: ./api
       target: development
     volumes:
-      - ./api:/app
+      - ./api/src:/app
+      - /mnt/csafe:/data
     image: topazdb/api
     environment:
       - TOPAZ_HOST=db

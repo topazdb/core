@@ -6,7 +6,7 @@ if ! mount | grep /run/topazdb; then
     sudo mkdir /run/topazdb
     sudo chown $USER /run/topazdb
 
-    sshfs -o allow_other ${NETID:-$USER}@isu-csafe.stat.iastate.edu:/media/Sunny/CSAFE /run/topazdb
+    sshfs -o allow_other -o umask=111 ${NETID:-$USER}@isu-csafe.stat.iastate.edu:/media/Sunny/CSAFE /run/topazdb
 fi
 
 docker-compose up

@@ -1,5 +1,5 @@
 <template>
-    <main class="scans">
+    <main class="Scans">
         <ul class="set-barrels scan-barrels grid no-grow">
             <li v-for="scan in scans" :key="scan.id">
                 <router-link :to="{ name: '' }">

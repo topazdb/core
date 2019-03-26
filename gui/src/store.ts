@@ -46,9 +46,6 @@ export default new Store({
         },
         addSet({ commit }, set) {
             let json = JSON.stringify(set);
-            console.log("set");
-            console.log(set);
-            console.log(json);
             return axios({
                 url: `http://localhost/api/sets/`,
                 method: 'post',
@@ -56,22 +53,22 @@ export default new Store({
                 data: json,
             })
             .then(function (response) {
-                console.log(response);
                 commit("setSet", response.data);
             })
             .catch(function (error) {
                 console.log(error);
             });
         },
-        editSet({ commit }, params) {
+        editSet({ commit }, param) {
+            let id = param[0];
+            let set = param[1];
             return axios({
-                url: `http://localhost/api/sets/${params[0]}`,
+                url: `http://localhost/api/sets/${id}`,
                 method: 'put',
-                data: {id: params[0], set: params[1]}
+                headers: { 'Content-Type': 'application/json'},
+                data: {id: id, set}
             })
             .then(function (response) {
-                console.log("response");
-                console.log(response);
                 commit("setSet", response.data);
             })
             .catch(function (error) {
@@ -110,7 +107,44 @@ export default new Store({
             .then(response => commit("setScans", { id: setId, scans: response.data }))
         },
 
+        /** 
+         * Add scan to set
+         */
+        addScan({ commit }, scan) {
+            return axios({
+                url: `http://localhost/api/scans/`,
+                method: 'post',
+                headers: { 'Content-Type': 'application/json'},
+                data: scan
+            })
+            .then(function (response) {
+                commit("setScans", response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+
+        /** 
+         * Add list of scans to set
+         */
+        addAllScans({ commit }, scans) {
+            let json = JSON.stringify(scans);
+            return axios({
+                url: `http://localhost/api/scans/addAll`,
+                method: 'put',
+                headers: { 'Content-Type': 'application/json'},
+                data: json
+            })
+            .then(function (response) {
+                commit("setScans", response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
     },
+    
 
     mutations: {
         clearSets(state) {

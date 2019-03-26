@@ -112,7 +112,7 @@
     @Component
     export default class Set extends Vue {
         editModeOn = false;
-        toAdd: Object[] = [];
+        
         asyncData({ store, route }: DataParameters) {
             return store.dispatch("getSet", route.params.id);
         } 
@@ -131,13 +131,21 @@
         save(){
             this.editModeOn = false;
             let scans = (this.$children[1] as any).getScans();
-            this.set.scans = scans;
+            
             let id = this.$route.params.id;
-            let set = this.set;
+            for(var key in scans){
+                if (scans.hasOwnProperty(key)) {
+                    scans[key].setId = this.set.id;
+                }
+            }
+            let scanSet = {
+                scans: scans
+            }
 
-            this.$store.dispatch("editSet", [id, set]);
+            this.$store.dispatch("addAllScans", scanSet).then(
+                () => this.$store.dispatch("getRundown", this.set.id)
+            )
         }
-
         cancel() {
             this.editModeOn = false;
         }

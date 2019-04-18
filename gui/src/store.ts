@@ -27,6 +27,7 @@ export default new Store({
         sets: {},
         rundown: {},
         scans: {},
+        instruments: {},
         status: {},
     },
 
@@ -178,6 +179,22 @@ export default new Store({
             });
         },
 
+         /** 
+         * Get instruments
+         */
+        getInstruments({ commit }) {
+            return axios.get(`/instruments`, {
+                validateStatus: code => code === 200
+            })
+            
+            .then(response => {
+                commit("clearInstruments");
+                
+                for(let instrument of response.data) {
+                    commit("setInstrument", instrument);
+                }
+            })
+        },
         /**
          * Get populator status
          */
@@ -213,6 +230,10 @@ export default new Store({
             state.sets = {};
         },
 
+        clearInstruments(state) {
+            state.instruments = {};
+        },
+
         setSet(state, set) {
             Vue.set(state.sets, set.id, set);
         },
@@ -225,6 +246,9 @@ export default new Store({
             Vue.set(state.scans, id, scans)
         },
 
+        setInstrument(state, instrument) {
+            Vue.set(state.instruments, instrument.id, instrument)
+        },
         setPopulatorStatus(state, status) {
             Vue.set(state.status, "populator", status);
         },

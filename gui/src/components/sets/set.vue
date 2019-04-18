@@ -5,9 +5,12 @@
             <div class="row">
                 <div class="set-creationDate">Created on <time>{{ set.creationDate | format }}</time></div> / 
                 <div class="set-lastScanDate">Last updated: <time>{{ set.lastScanDate | format }}</time></div>
+                <div class="opt">
+                    <button class="btn add-scan" @click="editModeOn=true">Add Scan</button>
+                    <button class="btn del" @click="remove">Delete Set</button>
+                </div>
             </div>
-            <button class="btn del" @click="remove">Delete Set</button>
-            <button class="btn add-scan" @click="editModeOn=true">Add Scan</button>
+            
         </div>
         <div class="edit" v-if="editModeOn">
             <ScanForm ></ScanForm>
@@ -38,15 +41,32 @@
     }
 
     .row {
+        width: 100%;
         div {
             display: inline-block;
             margin: 0 15px;
-
             &:first-of-type {
                 margin-left: 0;
             }
         }
-    }    
+        .opt {
+            float:right;
+        }
+        .del, .add-scan {
+            background: $primaryColor;
+            border-radius: 5px;
+            height: 30px;
+            width: 130px;
+            padding: 5px;
+            margin: 0 5px;
+            text-align: center;
+            border-style: solid;
+            border-width:thin;   
+        }
+        .del:hover, .add-scan:hover {
+            cursor: pointer;
+        }
+        }    
 
     .barrels {
         li {
@@ -70,22 +90,7 @@
             flex-basis: 10%;
         }
     }
-
-    .del, .add-scan {
-        background: whitesmoke;
-        border-radius: 5px;
-        height: 30px;
-        width: 100px;
-        padding: 5px;
-        margin-left: 10px;
-        text-align: center;
-        border-style: solid;
-        border-width:thin;   
-        float:right;
-    }
-    .del:hover, .add-scan:hover {
-        cursor: pointer;
-    }
+    
     .edit {
         background: #eee;
         border-radius: 5px;
@@ -112,9 +117,11 @@
     @Component
     export default class Set extends Vue {
         editModeOn = false;
-        
+
         asyncData({ store, route }: DataParameters) {
-            return store.dispatch("getSet", route.params.id);
+            return store.dispatch("getSet", route.params.id).then(
+                () => store.dispatch("getInstruments")
+            );
         } 
 
         get set() {
@@ -125,14 +132,12 @@
             this.$store.dispatch("removeSet", this.set.id).then(
                 () => this.$router.push({ name: 'home' })
             );
-            
         }
          
         save(){
             this.editModeOn = false;
             let scans = (this.$children[1] as any).getScans();
             
-            let id = this.$route.params.id;
             for(var key in scans){
                 if (scans.hasOwnProperty(key)) {
                     scans[key].setId = this.set.id;

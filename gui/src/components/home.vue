@@ -100,9 +100,7 @@
             }
         }
     }
-
-    
-    .btn-paging:hover, .btn-add-set:hover {
+    .btn:hover {
         cursor: pointer;
     }
 

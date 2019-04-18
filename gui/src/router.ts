@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import { Home, SetForm, ScanForm, Status } from "./components";
+import { Home, SetForm, ScanForm, PageNotFound, Status } from "./components";
 import { Set, Rundown, Scans } from "./components/sets";
 
 
@@ -21,6 +21,7 @@ export default new Router({
                 { name: "scanForm", path: "/setForm/add", component: ScanForm}
             ]
         },
+
         { 
             path: "/sets/:id", 
             component: Set,
@@ -34,6 +35,7 @@ export default new Router({
             name: "status",
             path: "/status",
             component: Status,
-        }
+        },
+        { path: '*', component: PageNotFound}
     ]
 }); 

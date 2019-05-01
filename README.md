@@ -6,4 +6,5 @@ The combined TopazDB stack
 git clone git@github.com:topazdb/core.git topazdb && cd topazdb
 bin/build
 ```
+
 To start TopazDB, run `./bin/start`

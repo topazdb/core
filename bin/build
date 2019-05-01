@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Cleanup
-sed -i "s/\\r//g" server/bin/combine
+# Pre-build cleanup
+sed -i "s/\\r//g" server/bin/combine # remove windows newline escape char
 cd gui
+
 if ! npm run clean &>/dev/null; then
     
     complete=false;
@@ -15,16 +16,21 @@ if ! npm run clean &>/dev/null; then
         if [ "$response" == "y" ] || [ "$response" == "" ]; then
             sudo npm run clean;
             complete=true;
+
         elif [ "$response" == "n" ]; then
             exit 1;
+
         else
             echo "Invalid response $response";
+
         fi;
 
     done;
 
 fi;
 
+
+# Build step
 cd ../
 docker-compose build
 
@@ -36,6 +42,7 @@ uid=$(id -u);
 docker exec $container npm i && npm run build
 docker exec $container chown -R $uid node_modules dist # allow developers to use npm client outside of docker
 
+# Post-build cleanup
 echo "Cleaning up..."
 docker stop $container >/dev/null && docker rm $container >/dev/null
 echo "Done"

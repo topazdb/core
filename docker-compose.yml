@@ -14,7 +14,12 @@ services:
     volumes:
       - ./gui:/app
     command: npm start -- --watch
-  
+    environment:
+      - TOPAZ_OKTA_DOMAIN
+      - TOPAZ_OKTA_CLIENTID
+      - TOPAZ_OKTA_AUTHSERV
+      - TOPAZ_OKTA_REDIRECTURI
+
   db:
     build: ./server
     image: topazdb/server
@@ -31,7 +36,13 @@ services:
       - /run/topazdb:/data
     image: topazdb/api
     environment:
+      - TOPAZ_BASEURL
       - TOPAZ_HOST=db
       - TOPAZ_USER
       - TOPAZ_PASSWORD
       - TOPAZ_DATABASE
+      - TOPAZ_OKTA_AUTHSERV
+      - TOPAZ_OKTA_DOMAIN
+      - TOPAZ_OKTA_CLIENTID
+      - TOPAZ_OKTA_CLIENTSECRET
+

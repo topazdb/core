@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ ! `mount | grep "/run/topazdb"` ] && [ $TOPAZ_NOMOUNT == "" ]; then
+if [ ! `mount | grep "/run/topazdb"` ] && [ $TOPAZ_NOMOUNT -eq "" ]; then
     sudo rm -rf /run/topazdb
     sudo mkdir /run/topazdb
     sudo chown $USER /run/topazdb

@@ -18,6 +18,8 @@ services:
     volumes:
       - ./gui:/app
     command: npm start -- --watch
+    networks:
+      - backend
     environment:
       - TOPAZ_OKTA_DOMAIN
       - TOPAZ_OKTA_CLIENTID
@@ -29,6 +31,8 @@ services:
     image: topazdb/server
     volumes:
       - data-store:/var/lib/mysql
+    networks:
+      - backend
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_RANDOM_ROOT_PASSWORD=1
@@ -43,6 +47,8 @@ services:
       - ./api/src:/app
       - /run/topazdb:/data
     image: topazdb/api
+    networks:
+      - backend
     depends_on:
       - db
     environment:
@@ -58,3 +64,6 @@ services:
 
 volumes:
   data-store:
+
+networks:
+  backend:

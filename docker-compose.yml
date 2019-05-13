@@ -3,8 +3,9 @@ services:
   core:
     build: .
     image: topazdb/core
-    depends_on:
-      - gui
+    restart: unless-stopped
+    networks:
+      - backend
     ports:
       - "80:80"
   
@@ -13,6 +14,7 @@ services:
       context: ./gui
       target: development
     image: topazdb/gui
+    restart: unless-stopped
     depends_on:
       - api
     volumes:
@@ -31,6 +33,7 @@ services:
     image: topazdb/server
     volumes:
       - data-store:/var/lib/mysql
+    restart: unless-stopped
     networks:
       - backend
     environment:
@@ -49,6 +52,7 @@ services:
     image: topazdb/api
     networks:
       - backend
+    restart: unless-stopped
     depends_on:
       - db
     environment:

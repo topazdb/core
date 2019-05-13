@@ -3,8 +3,8 @@ services:
   core:
     image: topazdb/core
     restart: unless-stopped
-    depends_on:
-      - gui 
+    networks:
+      - backend
     ports:
       - "80:80"
   

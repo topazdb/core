@@ -34,7 +34,7 @@ services:
       - backend
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
-      - MARIADB_RANDOM_ROOT_PASSWORD=1
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
       - MARIADB_USER=${TOPAZ_USER}
       - MARIADB_PASSWORD=${TOPAZ_PASSWORD}
 

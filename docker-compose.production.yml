@@ -2,6 +2,7 @@ version: '3'
 services:
   core:
     image: topazdb/core
+    restart: unless-stopped
     depends_on:
       - gui 
     ports:
@@ -9,6 +10,7 @@ services:
   
   gui:
     image: topazdb/gui
+    restart: unless-stopped
     depends_on:
       - api
     ports:
@@ -21,6 +23,7 @@ services:
   
   db:
     image: topazdb/server
+    restart: unless-stopped
     volumes:
       - db-store:/var/lib/mysql
     environment:
@@ -31,6 +34,7 @@ services:
 
   api:
     image: topazdb/api
+    restart: unless-stopped
     depends_on:
       - db
     volumes:
@@ -45,6 +49,19 @@ services:
       - TOPAZ_OKTA_DOMAIN
       - TOPAZ_OKTA_CLIENTID
       - TOPAZ_OKTA_CLIENTSECRET
+
+  updater:
+    image: pyouroboros/ouroboros
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    environment:
+      - INTERVAL=300
+      - CLEANUP=true
+      - LOG_LEVEL=info
+      - SELF_UPDATE=true
+      - TZ=America/Chicago
+      - MONITOR="topazdb/core topazdb/server topazdb/api topazdb/gui"
 
 volumes:
   data-store:

@@ -13,8 +13,6 @@ services:
     restart: unless-stopped
     depends_on:
       - api
-    ports:
-      - "80:80"
     environment:
       - TOPAZ_OKTA_DOMAIN
       - TOPAZ_OKTA_CLIENTID
@@ -25,7 +23,7 @@ services:
     image: topazdb/server
     restart: unless-stopped
     volumes:
-      - db-store:/var/lib/mysql
+      - data-store:/var/lib/mysql
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_RANDOM_ROOT_PASSWORD=1

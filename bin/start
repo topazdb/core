@@ -9,4 +9,9 @@ if [ ! `mount | grep "/run/topazdb"` ] && [ "$TOPAZ_NOMOUNT" == "" ]; then
     sshfs -o allow_other -o umask=111 ${NETID:-$USER}@isu-csafe.stat.iastate.edu:/media/Sunny/CSAFE /run/topazdb
 fi
 
-docker-compose up
+
+if [ "$TOPAZ_ENV" == "production" ]; then
+	docker-compose -f docker-compose.production.yml up
+else
+	docker-compose up
+fi

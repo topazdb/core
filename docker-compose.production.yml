@@ -11,6 +11,8 @@ services:
   gui:
     image: topazdb/gui
     restart: unless-stopped
+    labels:
+      com.ouroboros.enable: true
     depends_on:
       - api
     networks:
@@ -24,6 +26,8 @@ services:
   db:
     image: topazdb/server
     restart: unless-stopped
+    labels:
+      com.ouroboros.enable: true
     volumes:
       - data-store:/var/lib/mysql
     networks:
@@ -37,6 +41,8 @@ services:
   api:
     image: topazdb/api
     restart: unless-stopped
+    labels:
+      com.ouroboros.enable: true
     depends_on:
       - db
     networks:
@@ -65,7 +71,8 @@ services:
       - LOG_LEVEL=info
       - SELF_UPDATE=true
       - TZ=America/Chicago
-      - MONITOR="topazdb/core topazdb/server topazdb/api topazdb/gui"
+      - LABEL_ENABLE=true
+      - LABELS_ONLY=true
 
 volumes:
   data-store:

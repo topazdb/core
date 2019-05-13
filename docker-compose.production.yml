@@ -21,6 +21,8 @@ services:
   
   db:
     image: topazdb/server
+    volumes:
+      - db-store:/var/lib/mysql
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
       - MARIADB_RANDOM_ROOT_PASSWORD=1
@@ -43,3 +45,6 @@ services:
       - TOPAZ_OKTA_DOMAIN
       - TOPAZ_OKTA_CLIENTID
       - TOPAZ_OKTA_CLIENTSECRET
+
+volumes:
+  data-store:

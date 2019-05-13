@@ -2,7 +2,9 @@ version: '3.4'
 services:
   core:
     build: .
-    image: topazdb/core  
+    image: topazdb/core
+    depends_on:
+      - gui
     ports:
       - "80:80"
   
@@ -11,6 +13,8 @@ services:
       context: ./gui
       target: development
     image: topazdb/gui
+    depends_on:
+      - api
     volumes:
       - ./gui:/app
     command: npm start -- --watch
@@ -25,7 +29,9 @@ services:
     image: topazdb/server
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
-      - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
+      - MARIADB_RANDOM_ROOT_PASSWORD=1
+      - MARIADB_USER=${TOPAZ_USER}
+      - MARIADB_PASSWORD=${TOPAZ_PASSWORD}
   
   api:
     build: 
@@ -35,6 +41,8 @@ services:
       - ./api/src:/app
       - /run/topazdb:/data
     image: topazdb/api
+    depends_on:
+      - db
     environment:
       - TOPAZ_BASEURL
       - TOPAZ_HOST=db

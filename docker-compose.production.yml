@@ -1,28 +1,45 @@
 version: '3'
 services:
   core:
-    build: .
-    image: topazdb/core  
+    image: topazdb/core
+    depends_on:
+      - gui 
     ports:
       - "80:80"
   
   gui:
     image: topazdb/gui
+    depends_on:
+      - api
     ports:
-      - "8080:8080"
+      - "80:80"
+    environment:
+      - TOPAZ_OKTA_DOMAIN
+      - TOPAZ_OKTA_CLIENTID
+      - TOPAZ_OKTA_AUTHSERV
+      - TOPAZ_OKTA_REDIRECTURI
   
   db:
     image: topazdb/server
-    ports:
-      - "3306:3306"
     environment:
       - MARIADB_DATABASE=${TOPAZ_DATABASE}
-      - MARIADB_ROOT_PASSWORD=${TOPAZ_PASSWORD}
+      - MARIADB_RANDOM_ROOT_PASSWORD=1
+      - MARIADB_USER=${TOPAZ_USER}
+      - MARIADB_PASSWORD=${TOPAZ_PASSWORD}
 
   api:
     image: topazdb/api
+    depends_on:
+      - db
+    volumes:
+      - /run/topazdb:/data
     environment:
+      - TOPAZ_BASEURL
       - TOPAZ_HOST=db
       - TOPAZ_USER
       - TOPAZ_PASSWORD
       - TOPAZ_DATABASE
+      - TOPAZ_OKTA_AUTHSERV
+      - TOPAZ_OKTA_DOMAIN
+      - TOPAZ_OKTA_CLIENTID
+      - TOPAZ_OKTA_CLIENTSECRET

@@ -3,6 +3,8 @@ services:
   core:
     image: topazdb/core
     restart: unless-stopped
+    labels:
+      com.ouroboros.enable: true
     networks:
       - backend
     ports:
@@ -18,6 +20,7 @@ services:
     networks:
       - backend
     environment:
+      - TOPAZ_BASEURL
       - TOPAZ_OKTA_DOMAIN
       - TOPAZ_OKTA_CLIENTID
       - TOPAZ_OKTA_AUTHSERV

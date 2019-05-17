@@ -1,16 +1,10 @@
 <template>
     <main class="set">
         <div class="set-head">
-            <h1>
-                {{ set.name }}
-            </h1>
-            <h2 v-if="'bullet' in $route.params">
-                {{ barrel === '0' ? "Unknowns" : `Barrel ${barrel}` }},
-                Bullet {{ bullet }}
-            </h2>
+            <h1 v-html="name"></h1>
             <div class="row">
-                <div class="set-creationDate">Set created on <time>{{ set.creationDate | format }}</time></div> 
-                <div class="set-lastScanDate">Set last updated on <time>{{ set.lastScanDate | format }}</time></div>
+                <div class="set-creationDate">Created on <time>{{ set.creationDate | format }}</time></div> 
+                <div class="set-lastScanDate">Last updated on <time>{{ set.lastScanDate | format }}</time></div>
                 <div class="opt" v-if="$store.state.authenticated">
                     <button class="btn add-scan" @click="editModeOn=true">Add Scan</button>
                     <button class="btn del" @click="remove">Delete Set</button>
@@ -19,12 +13,13 @@
             
         </div>
         <div class="edit" v-if="editModeOn">
-            <ScanForm ></ScanForm>
+            <ScanForm></ScanForm>
             <button class="btn-scan save" @click="save">Save</button>
             <button class="btn-scan cancel" @click="cancel">Cancel</button>
         </div>
         
-        <router-view></router-view>
+        <rundown v-if="set.subsets.length > 0" v-bind:set="set"></rundown>
+        <scans v-if="set.scans.length > 0" v-bind:set="set"></scans>
     </main>
 </template>
 
@@ -43,6 +38,16 @@
         .set-head {
             padding: 20px 0;
             border-bottom: 5px solid $primaryColor;
+
+            h1 a {
+                text-decoration: none;
+                color: $primaryColor;
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
     }
 
@@ -109,19 +114,26 @@
 <script lang="ts">
     import Vue from "vue";
     import Component from "vue-class-component";
-    import ScanForm from "./scanForm.vue"
+    import ScanForm from "./scanForm.vue";
+    import Rundown from "./rundown.vue";
+    import Scans from "./scans.vue";
+
      declare var require: any;
 
     Vue.component('ScanForm', ScanForm);
 
-    @Component
+    @Component({
+        // @ts-ignore
+        components: {
+            Rundown,
+            Scans
+        }
+    })
     export default class Set extends Vue {
         editModeOn = false;
 
         asyncData({ store, route }: DataParameters) {
-            return store.dispatch("getSet", route.params.id).then(
-                () => store.dispatch("getInstruments")
-            );
+            return store.dispatch("getSet", route.params.id);
         } 
 
         get set() {
@@ -138,6 +150,28 @@
 
         get bullet() {
             return this.$route.params.bullet;
+        }
+
+
+        get name() {
+            let nodes = [] as { id: number; name: string; childPrefix: string|null; ignorePrefix: boolean }[];
+            let current = this.set;
+
+            do {
+                nodes.unshift(current);
+                current = current.parent;
+            } while(current !== null);
+
+            let name = "";
+            for(let i = 0; i < nodes.length; i++) {
+                let includePrefix = i !== 0 && nodes[i - 1].childPrefix !== null && !nodes[i].ignorePrefix;
+                name += `<a href="sets/${nodes[i].id}">`;
+                name += includePrefix ? `${nodes[i - 1].childPrefix} ${nodes[i].name}` : `${nodes[i].name}`;
+                name += `</a>`;
+                name += i !== nodes.length - 1 ? " - " : "";
+            }
+
+            return name;
         }
 
         remove(){
